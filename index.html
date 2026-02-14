@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VM Estudio Jurídico | Accidentes de Tránsito | Viviana Mangieri</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1a2744;
+  --navy-dark:#0f1a2e;
+  --navy-mid:#243158;
+  --gold:#c9a84c;
+  --gold-light:#e0bb6e;
+  --gold-pale:#f5e8c8;
+  --white:#ffffff;
+  --off-white:#f7f6f2;
+  --gray:#6b7280;
+  --light:#eef0f5;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--navy-dark);overflow-x:hidden;background:var(--navy-dark)}
+a{text-decoration:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--navy-dark)}
+::-webkit-scrollbar-thumb{background:var(--gold)}
+
+/* ─── HEADER ─── */
+.header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:all .3s}
+.header.scrolled{background:rgba(15,26,46,.98);backdrop-filter:blur(10px)}
+.header-inner{max-width:1280px;margin:0 auto;padding:1.2rem 2.5rem;display:flex;align-items:center;justify-content:space-between}
+.logo img{height:58px;width:auto}
+.logo-svg{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+.logo-svg svg{height:48px;width:auto;flex-shrink:0}
+.logo-txt{display:flex;flex-direction:column;line-height:1}
+.logo-txt-name{font-family:'Merriweather',serif;font-size:.95rem;font-weight:900;color:var(--gold);letter-spacing:.08em;text-transform:uppercase}
+.logo-txt-sub{font-size:.65rem;font-weight:500;color:rgba(255,255,255,.55);letter-spacing:.18em;text-transform:uppercase;margin-top:.25rem}
+.nav{display:flex;align-items:center;gap:2.5rem}
+.nav a{color:rgba(255,255,255,.75);font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;transition:.3s}
+.nav a:hover{color:var(--gold-light)}
+.nav-cta{padding:.65rem 1.8rem;background:var(--gold);color:var(--navy-dark) !important;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.3s !important}
+.nav-cta:hover{background:var(--gold-light) !important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hamburger span{width:26px;height:2px;background:var(--white);transition:.3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(7px,7px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
+.mobile-nav{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:var(--navy);padding:5rem 2rem;z-index:999;transition:.4s;border-left:2px solid rgba(201,168,76,.3)}
+.mobile-nav.open{right:0}
+.mobile-nav ul{list-style:none;display:flex;flex-direction:column;gap:2rem}
+.mobile-nav a{color:rgba(255,255,255,.85);font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+
+/* ─── HERO: fondo oscuro con imagen carretera + urgencia ─── */
+.hero{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1543674892-7d64d45df18b?w=1920&q=80') center/cover no-repeat;filter:grayscale(60%)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,26,46,.97) 50%,rgba(15,26,46,.75) 100%)}
+.hero-inner{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:130px 2.5rem 5rem;width:100%;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);padding:.5rem 1.2rem;margin-bottom:2rem}
+.hero-badge i{color:var(--gold);font-size:.85rem}
+.hero-badge span{color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-family:'Merriweather',serif;font-size:clamp(2.2rem,5vw,4.2rem);font-weight:900;color:var(--white);line-height:1.15;margin-bottom:1.5rem;max-width:100%}
+.hero h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:1.1rem;color:rgba(255,255,255,.7);line-height:1.8;max-width:700px;margin:0 auto 3rem}
+.hero-urgencia{background:rgba(201,168,76,.1);border-left:4px solid var(--gold);padding:1.2rem 1.5rem;margin:0 auto 3rem;max-width:680px;text-align:left}
+.hero-urgencia p{font-size:.95rem;color:rgba(255,255,255,.85);line-height:1.7}
+.hero-urgencia strong{color:var(--gold-light)}
+.hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;justify-content:center}
+.btn-gold{padding:1.1rem 2.8rem;background:var(--gold);color:var(--navy-dark);font-size:.9rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:.3s;display:inline-flex;align-items:center;gap:.7rem}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-ghost{padding:1.1rem 2.2rem;background:transparent;color:rgba(255,255,255,.8);font-size:.9rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:.3s;display:inline-block;border:1px solid rgba(255,255,255,.3)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:3rem;border-top:1px solid rgba(201,168,76,.2);justify-content:center}
+.hstat-num{font-family:'Merriweather',serif;font-size:2.5rem;font-weight:900;color:var(--gold);line-height:1}
+.hstat-label{font-size:.8rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem}
+
+/* ─── ALERTA URGENTE: banda roja de urgencia ─── */
+.alerta{background:linear-gradient(90deg,var(--navy) 0%,var(--navy-mid) 100%);border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);padding:1.8rem 2.5rem;text-align:center}
+.alerta-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap}
+.alerta p{font-size:1.05rem;color:var(--white);font-weight:500}
+.alerta strong{color:var(--gold-light)}
+.alerta .btn-alerta{padding:.7rem 2rem;background:var(--gold);color:var(--navy-dark);font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.3s;white-space:nowrap}
+.alerta .btn-alerta:hover{background:var(--gold-light)}
+
+/* ─── QUIEN SOS: fondo claro, texto oscuro ─── */
+.quienes{background:var(--off-white);padding:7rem 2.5rem}
+.quienes-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.q-tag{font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.q-title{font-family:'Merriweather',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:900;color:var(--navy-dark);line-height:1.2;margin-bottom:2rem}
+.q-text{font-size:1rem;color:var(--gray);line-height:1.9;margin-bottom:1.5rem}
+.q-list{list-style:none;display:flex;flex-direction:column;gap:.9rem;margin-top:2rem}
+.q-list li{display:flex;align-items:flex-start;gap:1rem;font-size:.95rem;color:var(--navy-dark);font-weight:500}
+.q-list li i{color:var(--gold);font-size:.9rem;margin-top:.2rem;flex-shrink:0}
+.q-img{position:relative}
+.q-img img{width:100%;height:500px;object-fit:cover;filter:grayscale(20%)}
+.q-img::before{content:'';position:absolute;top:-15px;left:-15px;width:100%;height:100%;border:3px solid var(--gold);z-index:0}
+.q-img img{position:relative;z-index:1}
+.q-chip{position:absolute;bottom:-20px;right:-20px;background:var(--navy-dark);padding:1.5rem 2rem;z-index:2;text-align:center}
+.q-chip strong{font-family:'Merriweather',serif;font-size:2rem;color:var(--gold);display:block;line-height:1}
+.q-chip span{font-size:.75rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em}
+
+/* ─── TIPOS DE ACCIDENTES ─── */
+.tipos{background:var(--navy-dark);padding:7rem 2.5rem;position:relative;overflow:hidden}
+.tipos::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80') center/cover no-repeat;filter:grayscale(100%);opacity:.05}
+.tipos-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1}
+.tipos-header{text-align:center;margin-bottom:4rem}
+.tipos-header .q-tag{color:var(--gold-light)}
+.tipos-header h2{font-family:'Merriweather',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:900;color:var(--white);line-height:1.2}
+.tipos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.tipo-card{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);padding:2.5rem 2rem;text-align:center;transition:.4s;cursor:default}
+.tipo-card:hover{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4);transform:translateY(-5px)}
+.tipo-icon{width:70px;height:70px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.6rem;color:var(--gold)}
+.tipo-card h3{font-family:'Merriweather',serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.8rem}
+.tipo-card p{font-size:.88rem;color:rgba(255,255,255,.5);line-height:1.7}
+
+/* ─── PROCESO: pasos a seguir ─── */
+.proceso{background:var(--off-white);padding:7rem 2.5rem}
+.proceso-inner{max-width:1280px;margin:0 auto}
+.proceso-header{text-align:center;margin-bottom:5rem}
+.proceso-header .q-tag{color:var(--gold)}
+.proceso-header h2{font-family:'Merriweather',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:900;color:var(--navy-dark);line-height:1.2}
+.proceso-header p{font-size:1rem;color:var(--gray);max-width:600px;margin:.8rem auto 0;line-height:1.7}
+.pasos{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.pasos::before{content:'';position:absolute;top:45px;left:calc(12.5%);width:75%;height:2px;background:linear-gradient(90deg,var(--gold),rgba(201,168,76,.2));z-index:0}
+.paso{text-align:center;padding:0 1.5rem;position:relative;z-index:1}
+.paso-num{width:90px;height:90px;background:var(--navy-dark);border:3px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-family:'Merriweather',serif;font-size:1.5rem;font-weight:900;color:var(--gold)}
+.paso h3{font-size:1rem;font-weight:700;color:var(--navy-dark);margin-bottom:.7rem}
+.paso p{font-size:.88rem;color:var(--gray);line-height:1.7}
+
+/* ─── QUE PODÉS RECLAMAR ─── */
+.reclamos{background:var(--navy);padding:7rem 2.5rem;position:relative;overflow:hidden}
+.reclamos::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=1920&q=80') center/cover no-repeat;filter:grayscale(100%);opacity:.06}
+.reclamos-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.reclamos-text .q-tag{color:var(--gold-light)}
+.reclamos-text h2{font-family:'Merriweather',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:900;color:var(--white);line-height:1.2;margin-bottom:1.5rem}
+.reclamos-text p{font-size:1rem;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:2rem}
+.reclamos-text .btn-gold{margin-top:1rem}
+.reclamos-items{display:flex;flex-direction:column;gap:1rem}
+.rec-item{display:flex;align-items:center;gap:1.5rem;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.15);padding:1.5rem 2rem;transition:.3s}
+.rec-item:hover{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.3)}
+.rec-item i{font-size:1.4rem;color:var(--gold);flex-shrink:0;width:30px}
+.rec-item div h4{font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:.2rem}
+.rec-item div p{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* ─── FAQS ─── */
+.faqs{background:var(--off-white);padding:7rem 2.5rem}
+.faqs-inner{max-width:900px;margin:0 auto}
+.faqs-header{text-align:center;margin-bottom:4rem}
+.faqs-header .q-tag{color:var(--gold)}
+.faqs-header h2{font-family:'Merriweather',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:900;color:var(--navy-dark);line-height:1.2}
+.faq-item{border-bottom:1px solid rgba(26,39,68,.12);margin-bottom:.5rem}
+.faq-question{padding:1.6rem 0;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.faq-question span{font-size:1rem;font-weight:600;color:var(--navy-dark);transition:.3s;text-align:center;width:100%}
+.faq-question i{color:var(--gold);flex-shrink:0;transition:.3s;font-size:.9rem}
+.faq-item.active .faq-question span{color:var(--navy)}
+.faq-item.active .faq-question i{transform:rotate(180deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .35s}
+.faq-answer p{padding:0 0 1.6rem;font-size:.95rem;color:var(--gray);line-height:1.85;text-align:center}
+.faq-item.active .faq-answer{max-height:400px}
+
+/* ─── CONTACTO: fondo marino + whatsapp prominente ─── */
+.contacto{background:var(--navy-dark);padding:7rem 2.5rem;position:relative;overflow:hidden}
+.contacto::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1920&q=80') center/cover no-repeat;filter:grayscale(100%);opacity:.06}
+.contacto-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1.2fr .8fr;gap:6rem;align-items:start}
+.contacto-main .q-tag{color:var(--gold-light)}
+.contacto-main h2{font-family:'Merriweather',serif;font-size:clamp(2rem,3.5vw,3.5rem);font-weight:900;color:var(--white);line-height:1.2;margin-bottom:1.5rem}
+.contacto-main p{font-size:1rem;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:3rem}
+.wa-grande{display:inline-flex;align-items:center;gap:1.2rem;background:#25D366;padding:1.4rem 2.5rem;color:var(--white);font-size:1.1rem;font-weight:700;letter-spacing:.05em;transition:.3s;margin-bottom:1.5rem}
+.wa-grande i{font-size:1.8rem}
+.wa-grande:hover{background:#1ebe5a;transform:translateY(-2px)}
+.contacto-datos{display:flex;flex-direction:column;gap:1.5rem;margin-top:2rem}
+.dato-row{display:flex;align-items:center;gap:1rem}
+.dato-row i{color:var(--gold);width:20px;font-size:1rem}
+.dato-row a,.dato-row span{font-size:.95rem;color:rgba(255,255,255,.7);transition:.3s}
+.dato-row a:hover{color:var(--gold-light)}
+.contacto-side{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.2);padding:3rem 2.5rem;border-top:4px solid var(--gold)}
+.contacto-side h3{font-family:'Merriweather',serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
+.contacto-side .sub{font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:2rem}
+.garantia-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.garantia-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.garantia-item i{color:var(--gold);font-size:1.1rem;margin-top:.1rem;flex-shrink:0}
+.garantia-item div h4{font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:.25rem}
+.garantia-item div p{font-size:.83rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* ─── FOOTER ─── */
+.footer{background:var(--navy-dark);border-top:1px solid rgba(201,168,76,.2);padding:3rem 2.5rem 2rem}
+.footer-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem}
+.footer-brand img{height:50px;width:auto;margin-bottom:.8rem}
+.footer-brand p{font-size:.83rem;color:rgba(255,255,255,.35);max-width:280px;line-height:1.7}
+.footer-brand .logo-svg{justify-content:center}
+.footer-copy{text-align:right}
+.footer-copy p{font-size:.78rem;color:rgba(255,255,255,.28);line-height:1.9}
+.footer-copy strong{color:var(--gold)}
+
+/* ─── WHATSAPP FLOAT ─── */
+.wa-float{position:fixed;bottom:2rem;right:2rem;width:62px;height:62px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;box-shadow:0 8px 30px rgba(37,211,102,.5);z-index:999;transition:.3s;animation:pulse 2.5s infinite}
+.wa-float:hover{transform:scale(1.1)}
+@keyframes pulse{0%,100%{box-shadow:0 8px 30px rgba(37,211,102,.5)}50%{box-shadow:0 8px 40px rgba(37,211,102,.8)}}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:1024px){
+  .quienes-inner{grid-template-columns:1fr;gap:3rem}
+  .q-img{display:none}
+  .tipos-grid{grid-template-columns:repeat(2,1fr)}
+  .pasos{grid-template-columns:repeat(2,1fr);gap:3rem}
+  .pasos::before{display:none}
+  .reclamos-inner{grid-template-columns:1fr}
+  .contacto-inner{grid-template-columns:1fr}
+}
+@media (max-width:768px){
+  *{max-width:100%;word-break:break-word}
+  body{overflow-x:hidden}
+  .header-inner{padding:1rem 1.5rem;justify-content:center;position:relative}
+  .logo{margin:0 auto}
+  .logo img{height:50px}
+  .nav{display:none}
+  .hamburger{display:flex;position:absolute;right:1.5rem;top:50%;transform:translateY(-50%)}
+  .hero-inner{padding:100px 1.5rem 4rem;text-align:center}
+  .hero-badge{margin:0 auto 2rem}
+  .hero h1{font-size:2rem}
+  .hero-sub{font-size:.95rem;margin:0 auto 2rem}
+  .hero-urgencia{text-align:left;max-width:100%}
+  .hero-btns{justify-content:center;flex-direction:column;align-items:center}
+  .hero-stats{justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:3rem}
+  .alerta-inner{flex-direction:column;gap:1rem}
+  .quienes{padding:4rem 1.5rem}
+  .quienes-inner{grid-template-columns:1fr;gap:2rem;text-align:center}
+  .q-list{align-items:flex-start;width:fit-content;margin-left:auto;margin-right:auto}
+  .q-list li{justify-content:flex-start;text-align:left}
+  .tipos{padding:4rem 1.5rem}
+  .tipos-grid{grid-template-columns:1fr;gap:1rem}
+  .proceso{padding:4rem 1.5rem}
+  .pasos{grid-template-columns:1fr;gap:2.5rem}
+  .pasos::before{display:none}
+  .proceso-header{margin-bottom:3rem}
+  .reclamos{padding:4rem 1.5rem}
+  .reclamos-inner{grid-template-columns:1fr;gap:2rem;text-align:center}
+  .reclamos-text .btn-gold{margin:1rem auto 0;display:inline-flex}
+  .faqs{padding:4rem 1.5rem}
+  .faqs-inner{max-width:100%}
+  .contacto{padding:4rem 1.5rem}
+  .contacto-inner{grid-template-columns:1fr;gap:3rem;text-align:center}
+  .wa-grande{justify-content:center}
+  .contacto-datos{align-items:center}
+  .footer{padding:3rem 1.5rem 2rem}
+  .footer-inner{flex-direction:column;align-items:center;text-align:center}
+  .footer-brand p{max-width:100%}
+  .footer-copy{text-align:center}
+  .wa-float{width:56px;height:56px;font-size:1.8rem;bottom:1.5rem;right:1.5rem}
+}
+
+/* ─── COMO ACTUAR ─── */
+.actuar{background:var(--gold);padding:6rem 2.5rem}
+.actuar-inner{max-width:1000px;margin:0 auto}
+.actuar-inner h2{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--navy-dark);text-align:center;margin-bottom:3rem}
+.actuar-list{display:flex;flex-direction:column;gap:1.2rem}
+.actuar-item{display:flex;align-items:flex-start;gap:1.5rem;background:rgba(0,0,0,.08);padding:1.2rem 1.8rem}
+.actuar-check{width:36px;height:36px;background:var(--navy-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.actuar-check i{color:var(--gold);font-size:.9rem}
+.actuar-item p{font-size:.97rem;color:var(--navy-dark);font-weight:500;line-height:1.6;padding-top:.4rem;text-align:center;width:100%}
+
+/* ─── FORM WHATSAPP ─── */
+.waform{background:var(--off-white);padding:6rem 2.5rem}
+.waform-inner{max-width:850px;margin:0 auto}
+.waform-header{text-align:center;margin-bottom:3rem}
+.waform-header .q-tag{color:var(--gold)}
+.waform-header h2{font-family:'Merriweather',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:var(--navy-dark);line-height:1.2;margin-bottom:.8rem}
+.waform-header p{font-size:.97rem;color:var(--gray);line-height:1.7}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+.form-field{display:flex;flex-direction:column;gap:.4rem}
+.form-field label{font-size:.78rem;font-weight:700;color:var(--navy);letter-spacing:.08em;text-transform:uppercase}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:.9rem 1.1rem;border:1.5px solid var(--light-gray,#ddd);background:var(--white);font-size:.93rem;font-family:'Inter',sans-serif;color:var(--navy-dark);outline:none;transition:.3s;-webkit-appearance:none}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--gold)}
+.form-field.full{grid-column:1/-1}
+.form-field textarea{resize:vertical;min-height:100px}
+.form-submit{width:100%;padding:1.2rem;background:var(--gold);color:var(--navy-dark);font-size:1rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.8rem;transition:.3s;margin-top:.5rem;font-family:'Inter',sans-serif}
+.form-submit:hover{background:var(--gold-light)}
+.form-submit i{font-size:1.3rem}
+.form-note{text-align:center;font-size:.82rem;color:var(--gray);margin-top:1rem}
+@media(max-width:768px){
+  .actuar{padding:4rem 1.5rem}
+  .actuar-item{padding:1rem 1.2rem}
+  .waform{padding:4rem 1.5rem}
+  .form-grid{grid-template-columns:1fr}
+  .form-field.full{grid-column:auto}
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <div class="logo"><a href="#inicio" class="logo-svg">
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Balanza fiel al logo de Viviana Mangieri -->
+        <!-- Base -->
+        <rect x="31" y="68" width="18" height="4" rx="1" fill="#c9a84c"/>
+        <rect x="25" y="72" width="30" height="3" rx="1.5" fill="#c9a84c"/>
+        <!-- Columna central -->
+        <rect x="38.5" y="28" width="3" height="41" rx="1" fill="#c9a84c"/>
+        <!-- Círculo superior -->
+        <circle cx="40" cy="24" r="4" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <!-- Brazo horizontal -->
+        <path d="M14 30 Q40 24 66 30" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <!-- Cuerda izquierda -->
+        <line x1="14" y1="30" x2="14" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="22" y1="30" x2="22" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Plato izquierdo -->
+        <path d="M10 42 Q18 48 26 42" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M10 42 Q18 44 26 42" fill="rgba(201,168,76,0.2)"/>
+        <!-- Cuerda derecha -->
+        <line x1="58" y1="30" x2="58" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="66" y1="30" x2="66" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Plato derecho -->
+        <path d="M54 42 Q62 48 70 42" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M54 42 Q62 44 70 42" fill="rgba(201,168,76,0.2)"/>
+      </svg>
+      <div class="logo-txt">
+        <span class="logo-txt-name">Viviana Mangieri</span>
+        <span class="logo-txt-sub">VM Estudio Jurídico</span>
+      </div>
+    </a></div>
+    <nav class="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#accidentes">Accidentes</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#faqs">FAQ</a>
+      <a href="#contacto" class="nav-cta">Consultar ahora</a>
+    </nav>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobileNav">
+  <ul>
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#accidentes">Accidentes</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#faqs">FAQ</a></li>
+    <li><a href="#contacto">Consultar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span>Especialista en Accidentes de Tránsito</span></div>
+    <h1>¿Sufriste un accidente<br>de tránsito? <em>Te ayudamos<br>a reclamar tu indemnización.</em></h1>
+    <p class="hero-sub">Con representación especializada, conseguís hasta un 300% más de indemnización que negociando solo con la aseguradora. No pagás nada hasta que cobrás.</p>
+    <div class="hero-urgencia">
+      <p><strong>Importante:</strong> Tenés hasta <strong>2 años</strong> desde el accidente para reclamar. Cada día que pasa puede perjudicar tu caso. Contactanos ahora y evaluamos tu situación sin costo.</p>
+    </div>
+    <div class="hero-btns">
+      <a href="https://wa.me/5491144071715?text=Hola,%20tuve%20un%20accidente%20de%20tránsito%20y%20necesito%20asesoramiento" class="btn-gold" target="_blank"><i class="fab fa-whatsapp"></i> Consultar por WhatsApp</a>
+      <a href="#proceso" class="btn-ghost">Ver cómo funciona</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num">$0</div>
+        <div class="hstat-label">Costo inicial</div>
+      </div>
+      <div>
+        <div class="hstat-num">24hs</div>
+        <div class="hstat-label">Primera respuesta</div>
+      </div>
+      <div>
+        <div class="hstat-num">2 años</div>
+        <div class="hstat-label">Plazo para reclamar</div>
+      </div>
+      <div>
+        <div class="hstat-num">100%</div>
+        <div class="hstat-label">Honorarios a resultado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALERTA URGENTE -->
+<div class="alerta">
+  <div class="alerta-inner">
+    <p><strong>¿Tuviste un accidente?</strong> No firmes nada con la aseguradora sin antes hablar con nosotros. Podrían ofrecerte mucho menos de lo que te corresponde.</p>
+    <a href="https://wa.me/5491144071715" class="btn-alerta" target="_blank">Contactar ahora</a>
+  </div>
+</div>
+
+<!-- QUIÉNES SOMOS -->
+<section class="quienes" id="quienes">
+  <div class="quienes-inner">
+    <div>
+      <p class="q-tag">VM Estudio Jurídico</p>
+      <h2 class="q-title">Viviana Lorena Mangieri — Tu abogada de tránsito</h2>
+      <p class="q-text">El VM Estudio Jurídico se especializa en la defensa de víctimas de accidentes de tránsito. Sabemos lo difícil que es atravesar ese momento: el estrés, las lesiones, los gastos inesperados y la presión de las aseguradoras.</p>
+      <p class="q-text">Nuestro trabajo es que vos te concentrés en recuperarte mientras nosotros nos ocupamos de que recibas la indemnización justa que corresponde por ley.</p>
+      <ul class="q-list">
+        <li><i class="fas fa-check-circle"></i>Representación ante compañías aseguradoras</li>
+        <li><i class="fas fa-check-circle"></i>Gestión extrajudicial y judicial completa</li>
+        <li><i class="fas fa-check-circle"></i>Honorarios solo si ganás el caso</li>
+        <li><i class="fas fa-check-circle"></i>Asesoramiento en derechos y obligaciones</li>
+        <li><i class="fas fa-check-circle"></i>Contacto directo con tu abogada en todo momento</li>
+      </ul>
+    </div>
+    <div class="q-img">
+      <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80" alt="Viviana Mangieri Abogada">
+      <div class="q-chip">
+        <strong>VM</strong>
+        <span>Estudio Jurídico</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOS DE ACCIDENTES -->
+<section class="tipos" id="accidentes">
+  <div class="tipos-inner">
+    <div class="tipos-header">
+      <p class="q-tag">¿En qué casos podemos ayudarte?</p>
+      <h2>Tipos de accidentes que atendemos</h2>
+    </div>
+    <div class="tipos-grid">
+      <div class="tipo-card">
+        <div class="tipo-icon"><i class="fas fa-car-crash"></i></div>
+        <h3>Choque entre autos</h3>
+        <p>Reclamamos por daños materiales y lesiones contra el responsable y su aseguradora.</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon"><i class="fas fa-motorcycle"></i></div>
+        <h3>Accidentes en moto</h3>
+        <p>Los motociclistas son los más vulnerables. Defendemos tu derecho a una reparación integral.</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon"><i class="fas fa-walking"></i></div>
+        <h3>Peatones atropellados</h3>
+        <p>Si fuiste atropellado cruzando la calle, tenés derecho a reclamar indemnización total.</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon"><i class="fas fa-bicycle"></i></div>
+        <h3>Ciclistas lesionados</h3>
+        <p>Accidentes en bicicleta con autos, camiones o en ciclovías sin señalizar correctamente.</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon"><i class="fas fa-bus"></i></div>
+        <h3>Pasajeros de transporte</h3>
+        <p>Accidentes en taxi, remis, colectivo o transporte privado. Reclamá como pasajero transportado.</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon"><i class="fas fa-truck"></i></div>
+        <h3>Accidentes con camiones</h3>
+        <p>Los casos con camiones o transporte de carga requieren estrategia legal especializada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section class="proceso" id="proceso">
+  <div class="proceso-inner">
+    <div class="proceso-header">
+      <p class="q-tag">Simple y sin vueltas</p>
+      <h2>¿Cómo funciona el reclamo?</h2>
+      <p>Te acompañamos en cada paso sin que tengas que adelantar dinero ni preocuparte por los trámites.</p>
+    </div>
+    <div class="pasos">
+      <div class="paso">
+        <div class="paso-num">01</div>
+        <h3>Consulta gratuita</h3>
+        <p>Contanos tu caso por WhatsApp o teléfono. Evaluamos la situación sin costo y sin compromiso.</p>
+      </div>
+      <div class="paso">
+        <div class="paso-num">02</div>
+        <h3>Análisis del caso</h3>
+        <p>Revisamos toda la documentación: parte policial, fotos, datos de seguros y certificados médicos.</p>
+      </div>
+      <div class="paso">
+        <div class="paso-num">03</div>
+        <h3>Reclamo y negociación</h3>
+        <p>Presentamos el reclamo ante la aseguradora y negociamos la indemnización que realmente te corresponde.</p>
+      </div>
+      <div class="paso">
+        <div class="paso-num">04</div>
+        <h3>Cobro de indemnización</h3>
+        <p>Una vez obtenida la indemnización, recibís tu dinero. Solo entonces abonás nuestros honorarios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUÉ PODÉS RECLAMAR -->
+<section class="reclamos">
+  <div class="reclamos-inner">
+    <div class="reclamos-text">
+      <p class="q-tag">Conocé tus derechos</p>
+      <h2>¿Qué podés reclamar después de un accidente?</h2>
+      <p>La indemnización no es solo por el daño al auto. Existen múltiples conceptos que podés reclamar y que las aseguradoras rara vez te informan voluntariamente.</p>
+      <a href="https://wa.me/5491144071715?text=Hola,%20quiero%20saber%20qué%20puedo%20reclamar%20por%20mi%20accidente" class="btn-gold" target="_blank"><i class="fab fa-whatsapp"></i> Calculá tu indemnización</a>
+    </div>
+    <div class="reclamos-items">
+      <div class="rec-item">
+        <i class="fas fa-car"></i>
+        <div><h4>Daños materiales</h4><p>Reparación o valor del vehículo dañado.</p></div>
+      </div>
+      <div class="rec-item">
+        <i class="fas fa-user-injured"></i>
+        <div><h4>Lesiones físicas</h4><p>Gastos médicos, estudios, tratamientos y rehabilitación.</p></div>
+      </div>
+      <div class="rec-item">
+        <i class="fas fa-brain"></i>
+        <div><h4>Daño psicológico</h4><p>Secuelas emocionales y tratamiento psicológico posterior.</p></div>
+      </div>
+      <div class="rec-item">
+        <i class="fas fa-ban"></i>
+        <div><h4>Incapacidad laboral</h4><p>Ingresos perdidos durante la recuperación o incapacidad permanente.</p></div>
+      </div>
+      <div class="rec-item">
+        <i class="fas fa-heart-broken"></i>
+        <div><h4>Daño moral</h4><p>Sufrimiento, angustia y impacto en tu calidad de vida.</p></div>
+      </div>
+      <div class="rec-item">
+        <i class="fas fa-taxi"></i>
+        <div><h4>Gastos de traslado</h4><p>Remises, taxis y gastos de movilidad durante la recuperación.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQS -->
+<section class="faqs" id="faqs">
+  <div class="faqs-inner">
+    <div class="faqs-header">
+      <p class="q-tag">Preguntas frecuentes</p>
+      <h2>Lo que todos preguntan</h2>
+    </div>
+    <div class="faqs-list">
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Cuánto tiempo tengo para hacer el reclamo?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>Tenés hasta 2 años desde la fecha del accidente para iniciar el reclamo civil. Sin embargo, cuanto antes actuás, mejor: las pruebas se conservan, los testigos recuerdan mejor y la negociación con la aseguradora es más favorable.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Tengo que pagar algo para empezar?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>No. Trabajamos con honorarios a resultado: solo cobramos si ganás tu caso. No hay costos iniciales, no hay adelantos. Podés iniciar tu reclamo sin pagar absolutamente nada.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Qué pasa si la aseguradora ya me ofreció un acuerdo?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>No firmes nada antes de consultarnos. Las aseguradoras suelen ofrecer montos muy inferiores a lo que realmente corresponde. Una vez que firmás, es muy difícil reclamar más. Contactanos primero y evaluamos si la oferta es justa.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Puedo reclamar si también tuve culpa en el accidente?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sí. En Argentina puede haber concurrencia de culpa, lo que significa que incluso si tuviste parte de responsabilidad, podés tener derecho a una indemnización proporcional. Cada caso es diferente y requiere análisis particular.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Y si el auto que me chocó no tenía seguro?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>Igual podés reclamar. Existe la posibilidad de accionar directamente contra el responsable del accidente o, en ciertos casos, contra el Fondo de Garantía de Sustentabilidad. Te asesoramos sobre las opciones disponibles para tu situación.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Cuánto tiempo tarda el proceso?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>Depende del caso. Muchos reclamos se resuelven de forma extrajudicial en la etapa de mediación, lo que puede llevar entre 3 y 12 meses. Si hay que ir a juicio, el proceso puede extenderse. Te informamos del estado de tu caso en todo momento.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><span>¿Qué documentación necesito?</span><i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>Lo básico: DNI, parte policial o denuncia, datos del seguro del otro vehículo, fotos del accidente, y certificados médicos si hubo lesiones. Si no tenés todo, no te preocupes: te orientamos sobre qué conseguir y cómo.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contacto" id="contacto">
+  <div class="contacto-inner">
+    <div class="contacto-main">
+      <p class="q-tag">Contacto</p>
+      <h2>Hablemos de<br>tu caso ahora</h2>
+      <p>Cada minuto cuenta. Contactanos hoy y recibí una evaluación gratuita de tu situación sin ningún compromiso. Estamos para ayudarte.</p>
+      <a href="https://wa.me/5491144071715?text=Hola,%20tuve%20un%20accidente%20de%20tránsito%20y%20necesito%20asesoramiento" class="wa-grande" target="_blank">
+        <i class="fab fa-whatsapp"></i> Escribir por WhatsApp
+      </a>
+      <div class="contacto-datos">
+        <div class="dato-row"><i class="fas fa-phone"></i><a href="tel:01144071715">(11) 4407-1715</a></div>
+        <div class="dato-row"><i class="fas fa-envelope"></i><a href="mailto:vmangieriabogada@hotmail.com">vmangieriabogada@hotmail.com</a></div>
+      </div>
+    </div>
+    <div class="contacto-side">
+      <h3>¿Por qué elegirnos?</h3>
+      <p class="sub">Compromisos que cumplimos con cada cliente</p>
+      <div class="garantia-item">
+        <i class="fas fa-shield-alt"></i>
+        <div><h4>Sin costo hasta que cobrás</h4><p>Nuestros honorarios se activan solo cuando recibís tu indemnización.</p></div>
+      </div>
+      <div class="garantia-item">
+        <i class="fas fa-clock"></i>
+        <div><h4>Respuesta en 24 horas</h4><p>Nos comunicamos rápido porque sabemos que cada hora importa.</p></div>
+      </div>
+      <div class="garantia-item">
+        <i class="fas fa-user-tie"></i>
+        <div><h4>Trato personalizado</h4><p>Hablás directamente con tu abogada, sin intermediarios.</p></div>
+      </div>
+      <div class="garantia-item">
+        <i class="fas fa-handshake"></i>
+        <div><h4>Negociación con aseguradoras</h4><p>Sabemos cómo negociar para conseguir la indemnización real.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- COMO ACTUAR -->
+<section class="actuar">
+  <div class="actuar-inner">
+    <h2>¿Cómo actuar ante un accidente de tránsito?</h2>
+    <div class="actuar-list">
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Pedirle al otro conductor los datos de su licencia de conducir y de su seguro.</p>
+      </div>
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Darle al otro conductor los datos de tu licencia de conducir y del seguro de tu auto.</p>
+      </div>
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Llamar a una ambulancia o concurrir a un centro de salud para que te revisen. Si interviene la policía, también tenés que darle los datos de tu licencia y del seguro.</p>
+      </div>
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Del auto con el que chocaste: anotá la patente, marca y nombre de la empresa de seguro.</p>
+      </div>
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Del conductor: nombre, DNI, domicilio y teléfono.</p>
+      </div>
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Del asegurado, si no es quien manejaba al momento del accidente: nombre, DNI, domicilio y teléfono.</p>
+      </div>
+      <div class="actuar-item">
+        <div class="actuar-check"><i class="fas fa-check"></i></div>
+        <p>Tomá fotos de los vehículos, los daños, las patentes y la escena del accidente antes de mover los autos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM WHATSAPP -->
+<section class="waform" id="form">
+  <div class="waform-inner">
+    <div class="waform-header">
+      <p class="q-tag">Contanos tu caso</p>
+      <h2>Envianos los detalles<br>de tu accidente</h2>
+      <p>Completá el formulario y te mandamos un mensaje a WhatsApp con toda la información organizada. Te respondemos a la brevedad.</p>
+    </div>
+    <div class="form-grid" id="waForm">
+      <div class="form-field">
+        <label for="nombre">Tu nombre</label>
+        <input type="text" id="nombre" placeholder="Ej: Juan García">
+      </div>
+      <div class="form-field">
+        <label for="telefono">Tu teléfono</label>
+        <input type="tel" id="telefono" placeholder="Ej: 11 1234-5678">
+      </div>
+      <div class="form-field">
+        <label for="tipo">Tipo de accidente</label>
+        <select id="tipo">
+          <option value="">Seleccioná...</option>
+          <option>Choque entre autos</option>
+          <option>Accidente en moto</option>
+          <option>Peatón atropellado</option>
+          <option>Ciclista lesionado</option>
+          <option>Pasajero de colectivo / taxi / remis</option>
+          <option>Accidente con camión</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="fecha">Fecha del accidente</label>
+        <input type="date" id="fecha">
+      </div>
+      <div class="form-field full">
+        <label for="lugar">Lugar del accidente</label>
+        <input type="text" id="lugar" placeholder="Ej: Av. Corrientes y Callao, CABA">
+      </div>
+      <div class="form-field full">
+        <label for="lesiones">¿Tuviste lesiones?</label>
+        <select id="lesiones">
+          <option value="">Seleccioná...</option>
+          <option>Sí, con atención médica</option>
+          <option>Sí, pero no fui al médico todavía</option>
+          <option>No, solo daños materiales</option>
+        </select>
+      </div>
+      <div class="form-field full">
+        <label for="detalle">Contanos brevemente qué pasó</label>
+        <textarea id="detalle" placeholder="Describí brevemente cómo ocurrió el accidente..."></textarea>
+      </div>
+    </div>
+    <button class="form-submit" onclick="enviarWhatsapp()">
+      <i class="fab fa-whatsapp"></i> Enviar consulta por WhatsApp
+    </button>
+    <p class="form-note">Al hacer clic se abrirá WhatsApp con tu consulta ya redactada. Sin compromiso.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#inicio" class="logo-svg" style="margin-bottom:.8rem">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="31" y="68" width="18" height="4" rx="1" fill="#c9a84c"/>
+          <rect x="25" y="72" width="30" height="3" rx="1.5" fill="#c9a84c"/>
+          <rect x="38.5" y="28" width="3" height="41" rx="1" fill="#c9a84c"/>
+          <circle cx="40" cy="24" r="4" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+          <path d="M14 30 Q40 24 66 30" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <line x1="14" y1="30" x2="14" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="22" y1="30" x2="22" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M10 42 Q18 48 26 42" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <line x1="58" y1="30" x2="58" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="66" y1="30" x2="66" y2="42" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M54 42 Q62 48 70 42" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="logo-txt">
+          <span class="logo-txt-name">Viviana Mangieri</span>
+          <span class="logo-txt-sub">VM Estudio Jurídico</span>
+        </div>
+      </a>
+      <p>Especialistas en accidentes de tránsito. Representación legal comprometida con las víctimas.</p>
+    </div>
+    <div class="footer-copy">
+      <p>&copy; 2026 VM Estudio Jurídico — Viviana Lorena Mangieri.</p>
+      <p>Todos los derechos reservados.</p>
+      <p>Desarrollado por <strong>@sageeDev</strong></p>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOTANTE -->
+<a href="https://wa.me/5491144071715?text=Hola,%20tuve%20un%20accidente%20y%20necesito%20asesoramiento" class="wa-float" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var header=document.getElementById('header');
+  var hamburger=document.getElementById('hamburger');
+  var mobileNav=document.getElementById('mobileNav');
+  window.addEventListener('scroll',function(){
+    header.classList.toggle('scrolled',window.scrollY>50);
+  });
+  hamburger.addEventListener('click',function(){
+    hamburger.classList.toggle('active');
+    mobileNav.classList.toggle('open');
+  });
+  document.querySelectorAll('.mobile-nav a').forEach(function(a){
+    a.addEventListener('click',function(){
+      hamburger.classList.remove('active');
+      mobileNav.classList.remove('open');
+    });
+  });
+  document.querySelectorAll('.faq-question').forEach(function(q){
+    q.addEventListener('click',function(){
+      q.parentElement.classList.toggle('active');
+    });
+  });
+});
+
+function enviarWhatsapp(){
+  var nombre   = document.getElementById('nombre').value.trim();
+  var telefono = document.getElementById('telefono').value.trim();
+  var tipo     = document.getElementById('tipo').value.trim();
+  var fecha    = document.getElementById('fecha').value.trim();
+  var lugar    = document.getElementById('lugar').value.trim();
+  var lesiones = document.getElementById('lesiones').value.trim();
+  var detalle  = document.getElementById('detalle').value.trim();
+
+  if(!nombre || !tipo || !lugar){
+    alert('Por favor completá al menos tu nombre, el tipo de accidente y el lugar.');
+    return;
+  }
+
+  var fechaFmt = fecha ? new Date(fecha + 'T00:00:00').toLocaleDateString('es-AR', {day:'2-digit',month:'2-digit',year:'numeric'}) : 'No especificada';
+
+  var msg = '';
+  msg += 'Hola, soy *' + nombre + '* y necesito asesoramiento legal por un accidente de tránsito.';
+  msg += '\n\n';
+  msg += '*--- DATOS DEL CASO ---*';
+  msg += '\n- Tipo de accidente: ' + (tipo || 'No especificado');
+  msg += '\n- Fecha del accidente: ' + fechaFmt;
+  msg += '\n- Lugar: ' + (lugar || 'No especificado');
+  msg += '\n- Lesiones: ' + (lesiones || 'No especificado');
+  if(detalle){ msg += '\n\n*Descripción:*\n' + detalle; }
+  if(telefono){ msg += '\n\n*Mi teléfono de contacto:* ' + telefono; }
+  msg += '\n\n¿Pueden asesorarme? Muchas gracias.';
+
+  var url = 'https://wa.me/5491144071715?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+</script>
+</body>
+</html>
